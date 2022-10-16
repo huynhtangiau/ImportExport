@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImportExpore.API.Helpers
+namespace ImportExport.API.Helpers
 {
     public  static class PdfHelper
     {

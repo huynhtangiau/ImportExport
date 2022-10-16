@@ -1,3 +1,4 @@
+using ImportExport.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ImportExpore.API
+namespace ImportExport.API
 {
     public class Startup
     {
@@ -32,6 +33,7 @@ namespace ImportExpore.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ImportExpore.API", Version = "v1" });
             });
+            services.ServicesRegister();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

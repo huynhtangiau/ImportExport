@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ImportExpore.API.Models
+namespace ImportExport.API.Models
 {
     public class ProductModel
     {

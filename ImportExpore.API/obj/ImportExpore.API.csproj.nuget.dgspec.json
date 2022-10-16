@@ -1,27 +1,170 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExpore.API\\ImportExpore.API.csproj": {}
+    "/Users/giauht/Supporting/ImportExpore.API/ImportExpore.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExpore.API\\ImportExpore.API.csproj": {
+    "/Users/giauht/Supporting/ImportExpore.API/ImportExpore.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExpore.API\\ImportExpore.API.csproj",
+        "projectUniqueName": "/Users/giauht/Supporting/ImportExpore.API/ImportExpore.API.csproj",
         "projectName": "ImportExpore.API",
-        "projectPath": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExpore.API\\ImportExpore.API.csproj",
-        "packagesPath": "C:\\Users\\giau.huynh.STS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExpore.API\\obj\\",
+        "projectPath": "/Users/giauht/Supporting/ImportExpore.API/ImportExpore.API.csproj",
+        "packagesPath": "/Users/giauht/.nuget/packages/",
+        "outputPath": "/Users/giauht/Supporting/ImportExpore.API/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\giau.huynh.STS\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/Users/giauht/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "/Users/giauht/Supporting/ImportExport.Service/ImportExport.Service.csproj": {
+                "projectPath": "/Users/giauht/Supporting/ImportExport.Service/ImportExport.Service.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "DocumentFormat.OpenXml": {
+              "target": "Package",
+              "version": "[2.18.0, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[6.0.8, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            },
+            "Spire.XLS": {
+              "target": "Package",
+              "version": "[12.9.2, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
+            },
+            "iTextSharp": {
+              "target": "Package",
+              "version": "[5.5.13.3, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Host.osx-x64",
+              "version": "[5.0.17, 5.0.17]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/giauht/Supporting/ImportExport.Core/ImportExport.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/giauht/Supporting/ImportExport.Core/ImportExport.Core.csproj",
+        "projectName": "ImportExport.Core",
+        "projectPath": "/Users/giauht/Supporting/ImportExport.Core/ImportExport.Core.csproj",
+        "packagesPath": "/Users/giauht/.nuget/packages/",
+        "outputPath": "/Users/giauht/Supporting/ImportExport.Core/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/giauht/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/giauht/Supporting/ImportExport.CrossCutting.Utils/ImportExport.CrossCutting.Utils.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/giauht/Supporting/ImportExport.CrossCutting.Utils/ImportExport.CrossCutting.Utils.csproj",
+        "projectName": "ImportExport.CrossCutting.Utils",
+        "projectPath": "/Users/giauht/Supporting/ImportExport.CrossCutting.Utils/ImportExport.CrossCutting.Utils.csproj",
+        "packagesPath": "/Users/giauht/.nuget/packages/",
+        "outputPath": "/Users/giauht/Supporting/ImportExport.CrossCutting.Utils/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/giauht/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -51,14 +194,6 @@
             "Spire.XLS": {
               "target": "Package",
               "version": "[12.9.2, )"
-            },
-            "Swashbuckle.AspNetCore": {
-              "target": "Package",
-              "version": "[6.4.0, )"
-            },
-            "iTextSharp": {
-              "target": "Package",
-              "version": "[5.5.13.3, )"
             }
           },
           "imports": [
@@ -67,25 +202,91 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[5.0.16, 5.0.16]"
-            }
-          ],
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/giauht/Supporting/ImportExport.Service/ImportExport.Service.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/giauht/Supporting/ImportExport.Service/ImportExport.Service.csproj",
+        "projectName": "ImportExport.Service",
+        "projectPath": "/Users/giauht/Supporting/ImportExport.Service/ImportExport.Service.csproj",
+        "packagesPath": "/Users/giauht/.nuget/packages/",
+        "outputPath": "/Users/giauht/Supporting/ImportExport.Service/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/giauht/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net5.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net5.0": {
+            "targetAlias": "net5.0",
+            "projectReferences": {
+              "/Users/giauht/Supporting/ImportExport.Core/ImportExport.Core.csproj": {
+                "projectPath": "/Users/giauht/Supporting/ImportExport.Core/ImportExport.Core.csproj"
+              },
+              "/Users/giauht/Supporting/ImportExport.CrossCutting.Utils/ImportExport.CrossCutting.Utils.csproj": {
+                "projectPath": "/Users/giauht/Supporting/ImportExport.CrossCutting.Utils/ImportExport.CrossCutting.Utils.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "dependencies": {
+            "DocumentFormat.OpenXml": {
+              "target": "Package",
+              "version": "[2.18.0, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[6.0.8, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[6.0.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
         }
       }
     }

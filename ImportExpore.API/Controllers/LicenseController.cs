@@ -1,5 +1,5 @@
-﻿using ImportExpore.API.Helpers;
-using ImportExpore.API.Models;
+﻿using ImportExport.API.Helpers;
+using ImportExport.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace ImportExpore.API.Controllers
+namespace ImportExport.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
