@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Interfaces\" />
+    <None Remove="Services\" />
+    <None Remove="Microsoft.Extensions.DependencyInjection" />
+    <None Remove="EPPlus" />
+    <None Remove="DocumentFormat.OpenXml" />
+    <None Remove="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.1" />
+    <PackageReference Include="EPPlus" Version="6.0.8" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ImportExport.Core\ImportExport.Core.csproj" />
+    <ProjectReference Include="..\ImportExport.CrossCutting.Utils\ImportExport.CrossCutting.Utils.csproj" />
+  </ItemGroup>
+</Project>
