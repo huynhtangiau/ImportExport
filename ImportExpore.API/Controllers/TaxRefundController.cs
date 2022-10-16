@@ -2,6 +2,7 @@
 using ImportExport.CrossCutting.Utils.Helpers;
 using ImportExport.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace ImportExport.API.Controllers
@@ -25,12 +26,13 @@ namespace ImportExport.API.Controllers
             string outputFolder = @"C:\Users\giau.huynh.STS\Giau\Support\TaxRefund",
             string taxGovPDFFile = @"GNTThue (33).pdf")
         {
-            rootFolder = $@"{rootFolder}\{refundId}\";
-            var taxGovPDFFileFullPath = $"{rootFolder}{taxGovPDFFile}";
+            rootFolder = Path.Combine(rootFolder, refundId);
+            var taxGovPDFFileFullPath = Path.Combine(rootFolder,taxGovPDFFile);
 
             rootFolder.ConvertXLSX();
 
-            var taxDeclaration = await _refundService.ReadData($"{rootFolder}{refundExcelFile}", $"{rootFolder}{amaExcelFile}");
+            var taxDeclaration = await _refundService.ReadData(Path.Combine(rootFolder, refundExcelFile),
+                Path.Combine(rootFolder, amaExcelFile));
 
             var pdfContent =  taxGovPDFFileFullPath.ReadPdfContent();
             _refundService.TranformData(taxDeclaration, pdfContent);
