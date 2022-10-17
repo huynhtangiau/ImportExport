@@ -16,7 +16,7 @@ namespace ImportExport.CrossCutting.Utils.Helpers
         {
             return string.Format("{0:n0}", num);
         }
-        public static string ToVietnameseText(this int inputNumber, bool suffix = false)
+        public static string ToVietnameseText(this int inputNumber, bool suffix = true)
         {
             string[] unitNumbers = new string[] { "không", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín" };
             string[] placeValues = new string[] { "", "nghìn", "triệu", "tỷ" };
@@ -101,7 +101,7 @@ namespace ImportExport.CrossCutting.Utils.Helpers
             }
             result = result.Trim();
             if (isNegative) result = "Âm " + result;
-            return result + (suffix ? " đồng chẵn" : "");
+            return result + (suffix ? " đồng" : "");
         }
 
     }

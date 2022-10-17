@@ -12,9 +12,6 @@
     <None Remove="Microsoft.Extensions.Options" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Helpers\" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="EPPlus" Version="6.0.8" />
     <PackageReference Include="Spire.XLS" Version="12.9.2" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
