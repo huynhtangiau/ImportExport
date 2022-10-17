@@ -54,7 +54,7 @@ namespace ImportExport.CrossCutting.Utils.Helpers
 
                 //add content to the page using ColumnText
                 Font font = new Font();
-                font.Size = 45;
+                font.Size = 14;
 
                 //setting up the X and Y coordinates of the document
                 int x = point.X;

@@ -87,8 +87,8 @@ namespace ImportExport.Service.Services
                 {
                     var productLicensePath = Path.Combine(outputFolder, productLicense.ProductNo);
                     var file = fileSearchPaths.FirstOrDefault();
-                    file.Path.AddTextToPdf(Path.Combine(productLicensePath, $"{productLicense.ProductNo}_{index}.pdf"), "giau",
-                        new System.Drawing.Point(15,15));
+                    file.Path.AddTextToPdf(Path.Combine(productLicensePath, $"{productLicense.ProductNo}_{index}.pdf"), productLicense.ProductNo,
+                        new System.Drawing.Point(450,25));
                    // System.IO.File.Copy(file.Path, Path.Combine(productLicensePath, $"{productLicense.ProductNo}_{index}.pdf"), true);
 
                     index++;
