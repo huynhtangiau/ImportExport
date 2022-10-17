@@ -1,0 +1,12 @@
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\bin\Debug\net5.0\ImportExport.Core.deps.json
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\bin\Debug\net5.0\ImportExport.Core.dll
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\bin\Debug\net5.0\ref\ImportExport.Core.dll
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\bin\Debug\net5.0\ImportExport.Core.pdb
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\obj\Debug\net5.0\ImportExport.Core.csproj.AssemblyReference.cache
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\obj\Debug\net5.0\ImportExport.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\obj\Debug\net5.0\ImportExport.Core.AssemblyInfoInputs.cache
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\obj\Debug\net5.0\ImportExport.Core.AssemblyInfo.cs
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\obj\Debug\net5.0\ImportExport.Core.csproj.CoreCompileInputs.cache
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\obj\Debug\net5.0\ImportExport.Core.dll
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\obj\Debug\net5.0\ref\ImportExport.Core.dll
+C:\Users\giau.huynh.STS\Giau\Support\ImportExpore.API\ImportExport.Core\obj\Debug\net5.0\ImportExport.Core.pdb

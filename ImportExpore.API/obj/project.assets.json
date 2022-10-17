@@ -3008,32 +3008,34 @@
     ]
   },
   "packageFolders": {
-    "/Users/giauht/.nuget/packages/": {}
+    "C:\\Users\\giau.huynh.STS\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/giauht/Supporting/ImportExpore.API/ImportExport.API.csproj",
+      "projectUniqueName": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExpore.API\\ImportExport.API.csproj",
       "projectName": "ImportExport.API",
-      "projectPath": "/Users/giauht/Supporting/ImportExpore.API/ImportExport.API.csproj",
-      "packagesPath": "/Users/giauht/.nuget/packages/",
-      "outputPath": "/Users/giauht/Supporting/ImportExpore.API/obj/",
+      "projectPath": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExpore.API\\ImportExport.API.csproj",
+      "packagesPath": "C:\\Users\\giau.huynh.STS\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExpore.API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/giauht/.config/NuGet/NuGet.Config"
+        "C:\\Users\\giau.huynh.STS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net5.0": {
           "targetAlias": "net5.0",
           "projectReferences": {
-            "/Users/giauht/Supporting/ImportExport.Service/ImportExport.Service.csproj": {
-              "projectPath": "/Users/giauht/Supporting/ImportExport.Service/ImportExport.Service.csproj"
+            "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExport.Service\\ImportExport.Service.csproj": {
+              "projectPath": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExport.Service\\ImportExport.Service.csproj"
             }
           }
         }
@@ -3079,15 +3081,14 @@
           "net47",
           "net471",
           "net472",
-          "net48",
-          "net481"
+          "net48"
         ],
         "assetTargetFallback": true,
         "warn": true,
         "downloadDependencies": [
           {
-            "name": "Microsoft.NETCore.App.Host.osx-x64",
-            "version": "[5.0.17, 5.0.17]"
+            "name": "Microsoft.NETCore.App.Host.win-x64",
+            "version": "[5.0.16, 5.0.16]"
           }
         ],
         "frameworkReferences": {
@@ -3098,7 +3099,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.400/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   },
@@ -3107,7 +3108,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'BouncyCastle 1.8.9' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'BouncyCastle 1.8.9' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
       "libraryId": "BouncyCastle",
       "targetGraphs": [
         "net5.0"
@@ -3117,7 +3118,7 @@
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'iTextSharp 5.5.13.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'iTextSharp 5.5.13.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8' instead of the project target framework 'net5.0'. This package may not be fully compatible with your project.",
       "libraryId": "iTextSharp",
       "targetGraphs": [
         "net5.0"

@@ -1,0 +1,90 @@
+{
+  "version": 3,
+  "targets": {
+    "net5.0": {
+      "ImportExport.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v5.0",
+        "compile": {
+          "bin/placeholder/ImportExport.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ImportExport.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ImportExport.Core/1.0.0": {
+      "type": "project",
+      "path": "../ImportExport.Core/ImportExport.Core.csproj",
+      "msbuildProject": "../ImportExport.Core/ImportExport.Core.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net5.0": [
+      "ImportExport.Core >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\giau.huynh.STS\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExport.Core.CrossCutting\\ImportExport.Core.CrossCutting.csproj",
+      "projectName": "ImportExport.Core.CrossCutting",
+      "projectPath": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExport.Core.CrossCutting\\ImportExport.Core.CrossCutting.csproj",
+      "packagesPath": "C:\\Users\\giau.huynh.STS\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExport.Core.CrossCutting\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\giau.huynh.STS\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net5.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "projectReferences": {
+            "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExport.Core\\ImportExport.Core.csproj": {
+              "projectPath": "C:\\Users\\giau.huynh.STS\\Giau\\Support\\ImportExpore.API\\ImportExport.Core\\ImportExport.Core.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net5.0": {
+        "targetAlias": "net5.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
