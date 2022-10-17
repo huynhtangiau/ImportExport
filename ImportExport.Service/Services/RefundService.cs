@@ -33,6 +33,7 @@ namespace ImportExport.Service.Services
                 var worksheet = package.Workbook.Worksheets[0];
                 refundTaxDeclaration.RefundTaxId = worksheet.GetText(worksheet.Cells["E4"]);
                 refundTaxDeclaration.RefundTaxDate = worksheet.GetText(worksheet.Cells["G83"]);
+                refundTaxDeclaration.RegisterDate = worksheet.GetText(worksheet.Cells["G8"]);
             }
             using (var package = new ExcelPackage(amaPath))
             {
@@ -54,12 +55,14 @@ namespace ImportExport.Service.Services
                 .Replace("1702", string.Empty)
                 .Replace("VNĐ", string.Empty).Trim();
 
-            var date = DateTime.ParseExact(refundTaxDeclaration.RefundTaxDate, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
-            refundTaxDeclaration.RefundTaxDate = date;
+            refundTaxDeclaration.RefundTaxDate = refundTaxDeclaration.RefundTaxDate.ToDate();
+            refundTaxDeclaration.RegisterDate = refundTaxDeclaration.RegisterDate.ToDate();
+
             var importAmount = refundTaxDeclaration.ImportAmount.ToInt();
             var vATAmount = refundTaxDeclaration.VATAmount.ToInt();
             var importAmounted = ImportAmounted.ToInt();
             var vATAmounted = VATAmounted.ToInt();
+
             refundTaxDeclaration.TotalAmount = (importAmount + vATAmount).ToComma();
             refundTaxDeclaration.ImportAmount = refundTaxDeclaration.ImportAmount.ToComma();
             refundTaxDeclaration.VATAmount = refundTaxDeclaration.VATAmount.ToComma();
@@ -90,6 +93,8 @@ namespace ImportExport.Service.Services
 
                 wordDoc.GetMergeFields("ImportMustPayAmount").ReplaceWithText(taxDeclaration.ImportMustPayAmount);
                 wordDoc.GetMergeFields("VATMustPayAmount").ReplaceWithText(taxDeclaration.VATMustPayAmount);
+
+                wordDoc.GetMergeFields("RegisterDate").ReplaceWithText(taxDeclaration.RegisterDate);
 
                 wordDoc.MainDocumentPart.Document.Save();
                 wordDoc.SaveAs(Path.Combine(outputFolder, $"CV HOÀN THUẾ_{taxDeclaration.RefundTaxId}.docx")).Close();

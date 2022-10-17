@@ -15,5 +15,6 @@ namespace ImportExport.Core.Models
         public string VATAmounted { get; set; }
         public string ImportMustPayAmount { get; set; }
         public string VATMustPayAmount { get; set; }
+        public string RegisterDate { get; set; }
     }
 }
