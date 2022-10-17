@@ -52,3 +52,6 @@ _Pvt_Extensions
 .fake/
 obj
 bin
+.vs
+obj
+obj
