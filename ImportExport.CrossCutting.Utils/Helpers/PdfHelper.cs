@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ImportExport.API.Helpers
+namespace ImportExport.CrossCutting.Utils.Helpers
 {
-    public  static class PdfHelper
+    public static class PdfHelper
     {
         public static string ReadPdfContent(this string path)
         {
