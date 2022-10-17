@@ -16,8 +16,6 @@ namespace ImportExport.API.Controllers
     [Route("[controller]")]
     public class LicenseController : ControllerBase
     {
-        
-
         private readonly ILogger<LicenseController> _logger;
 
         public LicenseController(ILogger<LicenseController> logger)
@@ -34,6 +32,11 @@ namespace ImportExport.API.Controllers
             ExportIntoFolder(productLicenses, sourceFolder, outputFolder);
             return Ok();
         }
+        private string ReplaceManual(string productName)
+        {
+            return productName.Replace("(SAMPLE)", string.Empty)
+                        .Replace(@"/", string.Empty);
+        }
         private ProductLicenseModel TransformItem(ExcelWorksheet worksheet, int rowIndex)
         {
             var productLicense = new ProductLicenseModel();
@@ -42,18 +45,24 @@ namespace ImportExport.API.Controllers
             if (!string.IsNullOrWhiteSpace(items))
             {
                 productLicense.Items = items.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
-                    .Select(s => new ProductModel { ProductName = s.Trim() })
+                    .Select(s => new ProductModel { ProductName = s.Trim(), RawName = s.Trim() })
                     .ToList();
-                var pattern = @"[0-9]+[\s]*ML.+";
-                var pcsPattern = @"SET.+[0-9]+PCS.+";
-             //   var specialPattern = @"[\+\/\*\)\(].+";
+                var pattern = @"[0-9]+[\s]*ML.*";
+                var pcsPattern = @"SET.*[0-9]+PCS.*";
+                var noPattern = @"NO\.[0-9]+.*";
                 foreach (var product in productLicense.Items) {
+                    if(Regex.IsMatch(product.ProductName, pcsPattern))
+                    {
+                        product.ProductNameV1 = string.Empty;
+                        continue;
+                    }
                     product.ProductName = Regex.Replace(product.ProductName, pattern, string.Empty)
                         .Trim();
-                    product.ProductName = Regex.Replace(product.ProductName, pcsPattern, string.Empty).Trim();
-                 //   product.ProductName = Regex.Replace(product.ProductName, specialPattern, string.Empty);
-                    product.ProductName = product.ProductName.Replace(":", string.Empty)
-                        .Replace("(SAMPLE)", string.Empty);
+                    product.ProductName = Regex.Replace(product.ProductName, noPattern, string.Empty).Trim();
+                    product.ProductNameV1 = product.ProductName.Replace(":", " ");
+                    product.ProductName = product.ProductName.Replace(":", string.Empty);
+                    product.ProductNameV1 = ReplaceManual(product.ProductNameV1);
+                    product.ProductName = ReplaceManual(product.ProductName);
                 }
             }
             return productLicense;
@@ -80,40 +89,43 @@ namespace ImportExport.API.Controllers
             {
                 return;
             }
-            foreach(var product in productLicense.Items)
+            var index = 1;
+            foreach (var product in productLicense.Items)
             {
-                var fileSearchPaths = files.Where(q => 
-                            q.FileName.ToLower().Contains(product.ProductName.ToLower())
-                            ).ToList();
+                var fileSearchPaths = files.Where(q => q.FileName.ToLower().Contains(product.ProductName.ToLower())
+                    || (!string.IsNullOrEmpty(product.ProductNameV1) && q.FileName.ToLower().Contains(product.ProductNameV1.ToLower())))
+                    .OrderByDescending(o => o.CreatedDate)
+                    .ToList();
                 if(fileSearchPaths.Count > 0)
                 {
-                    var productLicensePath = $@"{outputFolder}\{productLicense.ProductNo}";
-                    var index = 1;
-                    foreach(var file in fileSearchPaths)
-                    {
-                        var pcbPDFContent = file.Path.ReadPdfContent();
-                            System.IO.File.Copy(file.Path, @$"{productLicensePath}\{productLicense.ProductNo}_{index}.pdf", true);
-                        index++;
-                    }
-                    
+                    var productLicensePath = Path.Combine(outputFolder, productLicense.ProductNo);
+                    var file = fileSearchPaths.FirstOrDefault();
+                    var pcbPDFContent = file.Path.ReadPdfContent();
+                    System.IO.File.Copy(file.Path, Path.Combine(productLicensePath , $"{productLicense.ProductNo}_{index}.pdf"), true);
+
+                    index++;
+
                 }
             }
         }
         private List<FileModel> GetFiles(string sourceFolderPath)
         {
-            var files = Directory.GetFiles(sourceFolderPath, "*.pdf", SearchOption.AllDirectories);
-            return files.Select(s => new FileModel() { 
-                    FileName = Path.GetFileNameWithoutExtension(s), 
-                    Path = s, 
-                    Extension = Path.GetExtension(s)})
-                .ToList();
+            DirectoryInfo dir = new DirectoryInfo(sourceFolderPath);
+            var files = dir.GetFiles("*.pdf", SearchOption.AllDirectories);
+            return files.Select(s => new FileModel()
+            {
+                FileName = s.Name,
+                Path = s.FullName,
+                Extension = s.Extension,
+                CreatedDate = s.CreationTime
+            }).ToList();
         }
         private void ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
         {
             var files = GetFiles(sourceFolderPath);
             foreach (var productLicense in productLicenses)
             {
-                var productLicensePath = $@"{outputFolder}\{productLicense.ProductNo}";
+                var productLicensePath = Path.Combine( outputFolder , productLicense.ProductNo);
                 if (!Directory.Exists(productLicensePath))
                 {
                     Directory.CreateDirectory(productLicensePath);

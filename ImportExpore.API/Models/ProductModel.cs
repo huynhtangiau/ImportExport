@@ -8,5 +8,7 @@ namespace ImportExport.API.Models
     public class ProductModel
     {
         public string ProductName { get; set; }
+        public string RawName { get; set; }
+        public string ProductNameV1 { get; set; }
     }
 }
