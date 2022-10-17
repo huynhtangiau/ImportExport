@@ -18,5 +18,10 @@ namespace ImportExport.CrossCutting.Utils.Helpers
         };
         public static string ToDate(this string input) =>
             DateTime.ParseExact(input, "dd/MM/yyyy HH:mm:ss", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+        public static string ToDate(this string input, string[] formats) =>
+            DateTime.ParseExact(input, formats, CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+        public static string ToDateFull(this string input) =>
+            input.Trim() == "0" || string.IsNullOrEmpty(input)? string.Empty
+            :DateTime.ParseExact(input, new string[] { "dd/MM/yyyy HH:mm:ss", "dd/M/yyyy", "d/M/yyyy", "M/d/yyyy" }, CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
     }
 }

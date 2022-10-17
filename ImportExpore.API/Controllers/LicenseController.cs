@@ -1,4 +1,5 @@
-﻿using ImportExport.Service.Interfaces;
+﻿using ImportExport.CrossCutting.Utils.Helpers;
+using ImportExport.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -24,6 +25,12 @@ namespace ImportExport.API.Controllers
         {
             var productLicenses = _licenseService.ReadData(productsExcelPath);
             _licenseService.ExportIntoFolder(productLicenses, sourceFolder, outputFolder);
+            return Ok();
+        }
+        [HttpGet]
+        public ActionResult Test(string path = @"C:\Users\giau.huynh.STS\Giau\Support\LICENSE\Test\1\1_1.pdf")
+        {
+            path.ReadSignatureContent();
             return Ok();
         }
     }

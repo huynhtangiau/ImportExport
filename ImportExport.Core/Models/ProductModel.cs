@@ -11,5 +11,7 @@ namespace ImportExport.Core.Models
         public string ProductName { get; set; }
         public string RawName { get; set; }
         public string ProductNameV1 { get; set; }
+        public string LicenseNo { get; set; }
+        public string LicenseDate { get; set; }
     }
 }

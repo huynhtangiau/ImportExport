@@ -34,8 +34,16 @@ namespace ImportExport.Service.Services
                     .Select(s => new ProductModel { ProductName = s.Trim(), RawName = s.Trim() })
                     .ToList();
                 var pattern = @"[0-9]+[\s]*ML.*";
-                var pcsPattern = @"SET.*[0-9]+PCS.*";
+                var pcsPattern = @"SET.*[0-9\s]+PCS.*";
                 var noPattern = @"NO\.[0-9]+.*";
+
+                var licenseDates = worksheet.Cells[rowIndex, 4].Text.Replace("NGÀY", string.Empty)
+                    .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+                var licenseNos = worksheet.Cells[rowIndex, 3].Text
+                    .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+
+                var index = 0;
                 foreach (var product in productLicense.Items)
                 {
                     if (Regex.IsMatch(product.ProductName, pcsPattern))
@@ -50,6 +58,12 @@ namespace ImportExport.Service.Services
                     product.ProductName = product.ProductName.Replace(":", string.Empty);
                     product.ProductNameV1 = ReplaceManual(product.ProductNameV1);
                     product.ProductName = ReplaceManual(product.ProductName);
+                    if (productLicense.Items.Count <= licenseNos.Length + 1)
+                    {
+                        product.LicenseNo = licenseNos[index].Trim();
+                        product.LicenseDate = licenseDates[index].Trim().ToDateFull();
+                        index++;
+                    }
                 }
             }
             return productLicense;
@@ -70,6 +84,33 @@ namespace ImportExport.Service.Services
             }
             return productLicenses;
         }
+        private FileModel FindByLicenseNoAndDate(ProductModel product, List<FileModel> searchFiles)
+        {
+            for(var i = 0; i < searchFiles.Count; i++)
+            {
+                var file = searchFiles[i];
+                if (string.IsNullOrEmpty(product.LicenseNo))
+                {
+                    return searchFiles.FirstOrDefault();
+                }
+                var signatureContent = file.Path.ReadSignatureContent();
+                var signatureArrays = signatureContent.Split(
+                    new string[] { "\r\n", "\r", "\n" },
+                    StringSplitOptions.None
+                );
+                if(signatureArrays.Length < 3)
+                {
+                    continue;
+                }
+                var pdfLicenseNo = signatureArrays[3].Trim().ToLower();
+                var pdfLicenseDate = signatureArrays[1].Replace("NGÀY", string.Empty).Trim().ToDateFull();
+                if(product.LicenseNo.ToLower() == pdfLicenseNo && product.LicenseDate == pdfLicenseDate)
+                {
+                    return file;
+                }
+            }
+            return searchFiles.FirstOrDefault();
+        }
         private void FindByProductName(ProductLicenseModel productLicense, List<FileModel> files, string outputFolder)
         {
             if (productLicense.Items.Count == 0)
@@ -86,10 +127,13 @@ namespace ImportExport.Service.Services
                 if (fileSearchPaths.Count > 0)
                 {
                     var productLicensePath = Path.Combine(outputFolder, productLicense.ProductNo);
-                    var file = fileSearchPaths.FirstOrDefault();
+                    var file = FindByLicenseNoAndDate(product, fileSearchPaths);
+                    if(file == null)
+                    {
+                        continue;
+                    }
                     file.Path.AddTextToPdf(Path.Combine(productLicensePath, $"{productLicense.ProductNo}_{index}.pdf"), productLicense.ProductNo,
                         new System.Drawing.Point(450,25));
-                   // System.IO.File.Copy(file.Path, Path.Combine(productLicensePath, $"{productLicense.ProductNo}_{index}.pdf"), true);
 
                     index++;
 

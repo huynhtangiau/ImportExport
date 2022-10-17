@@ -1,6 +1,7 @@
 ﻿using iTextSharp.text;
 using iTextSharp.text.pdf;
 using iTextSharp.text.pdf.parser;
+using iTextSharp.text.pdf.security;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -64,6 +65,54 @@ namespace ImportExport.CrossCutting.Utils.Helpers
 
                 ColumnText.ShowTextAligned(pbover, Element.ALIGN_CENTER, new Phrase(textToAdd, font), x, y, 0);
             }
+        }
+        public static String extractText(PdfStream xObject)
+        {
+            PdfDictionary resources = xObject.GetAsDict(PdfName.RESOURCES);
+            ITextExtractionStrategy strategy = new LocationTextExtractionStrategy();
+
+            PdfContentStreamProcessor processor = new PdfContentStreamProcessor(strategy);
+            processor.ProcessContent(ContentByteUtils.GetContentBytesFromContentObject(xObject), resources);
+            return strategy.GetResultantText();
+        }
+        public static string ReadSignatureContent(this string path)
+        {
+            StringBuilder sb = new StringBuilder();
+            PdfReader reader = new PdfReader(path);
+            AcroFields fields = reader.AcroFields;
+            foreach (string name in fields.GetSignatureNames())
+            {
+                iTextSharp.text.pdf.AcroFields.Item item = fields.GetFieldItem(name);
+                PdfDictionary widget = item.GetWidget(0);
+                PdfDictionary ap = widget.GetAsDict(PdfName.AP);
+                if (ap == null)
+                    continue;
+                PdfStream normal = ap.GetAsStream(PdfName.N);
+                if (normal == null)
+                    continue;
+               return extractText(normal);
+
+                PdfDictionary resources = normal.GetAsDict(PdfName.RESOURCES);
+                if (resources == null)
+                    continue;
+                PdfDictionary xobject = resources.GetAsDict(PdfName.XOBJECT);
+                if (xobject == null)
+                    continue;
+                PdfStream frm = xobject.GetAsStream(PdfName.FRM);
+                if (frm == null)
+                    continue;
+                PdfDictionary res = frm.GetAsDict(PdfName.RESOURCES);
+                if (res == null)
+                    continue;
+                PdfDictionary xobj = res.GetAsDict(PdfName.XOBJECT);
+                if (xobj == null)
+                    continue;
+                PRStream n2 = (PRStream)xobj.GetAsStream(PdfName.N2);
+                if (n2 == null)
+                    continue;
+                return extractText(n2);
+            }
+            return string.Empty;
         }
     }
 }
