@@ -28,9 +28,9 @@ namespace ImportExport.API.Controllers
             return Ok();
         }
         [HttpGet]
-        public ActionResult Test(string path = @"C:\Users\giau.huynh.STS\Giau\Support\LICENSE\Test\1\1_1.pdf")
+        public ActionResult Test(string path = @"/Users/giauht/Downloads/123.pdf")
         {
-            path.ReadSignatureContent();
+            path.AddTextToPdf(path,"1", new System.Drawing.Point(15,450));
             return Ok();
         }
     }

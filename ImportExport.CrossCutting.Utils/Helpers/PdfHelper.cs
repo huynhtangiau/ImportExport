@@ -45,7 +45,7 @@ namespace ImportExport.CrossCutting.Utils.Helpers
             using (PdfStamper stamper = new PdfStamper(reader, new FileStream(pathout, FileMode.Create)))
             {
                 //select two pages from the original document
-                reader.SelectPages("1-2");
+                reader.SelectPages("1-1");
 
                 //gettins the page size in order to substract from the iTextSharp coordinates
                 var pageSize = reader.GetPageSize(1);
