@@ -84,14 +84,18 @@ namespace ImportExport.Service.Services
             }
             return productLicenses;
         }
-        private FileModel FindByLicenseNoAndDate(ProductModel product, List<FileModel> searchFiles)
+        private SearchFileModel FindByLicenseNoAndDate(ProductModel product, List<FileModel> searchFiles)
         {
             for(var i = 0; i < searchFiles.Count; i++)
             {
                 var file = searchFiles[i];
                 if (string.IsNullOrEmpty(product.LicenseNo))
                 {
-                    return searchFiles.FirstOrDefault();
+                    return new SearchFileModel
+                    {
+                        ResultKey = SearchResultKey.FirstItem,
+                        File = searchFiles.FirstOrDefault()
+                    };
                 }
                 var signatureContent = file.Path.ReadSignatureContent();
                 var signatureArrays = signatureContent.Split(
@@ -106,10 +110,17 @@ namespace ImportExport.Service.Services
                 var pdfLicenseDate = signatureArrays[1].Replace("NGÀY", string.Empty).Trim().ToDateFull();
                 if(product.LicenseNo.ToLower() == pdfLicenseNo && product.LicenseDate == pdfLicenseDate)
                 {
-                    return file;
+                    return new SearchFileModel { 
+                        ResultKey = SearchResultKey.FirstItem,
+                        File = file
+                    };
                 }
             }
-            return searchFiles.FirstOrDefault();
+            return new SearchFileModel
+            {
+                ResultKey = SearchResultKey.Found,
+                File = searchFiles.FirstOrDefault()
+            };
         }
         private void FindByProductName(ProductLicenseModel productLicense, List<FileModel> files, string outputFolder)
         {
@@ -127,12 +138,21 @@ namespace ImportExport.Service.Services
                 if (fileSearchPaths.Count > 0)
                 {
                     var productLicensePath = Path.Combine(outputFolder, productLicense.ProductNo);
-                    var file = FindByLicenseNoAndDate(product, fileSearchPaths);
-                    if(file == null)
+                    var search = FindByLicenseNoAndDate(product, fileSearchPaths);
+                    if(search.File == null)
                     {
                         continue;
                     }
-                    file.Path.AddTextToPdf(Path.Combine(productLicensePath, $"{productLicense.ProductNo}_{index}.pdf"), productLicense.ProductNo,
+                    var newFileName = string.Empty;
+                    if(search.ResultKey == SearchResultKey.FirstItem)
+                    {
+                        newFileName = $"{productLicense.ProductNo}_backup_{index}.pdf";
+                    }
+                    else if (search.ResultKey == SearchResultKey.Found)
+                    {
+                        newFileName = $"{productLicense.ProductNo}_{index}.pdf";
+                    }
+                    search.File.Path.AddTextToPdf(Path.Combine(productLicensePath, $"{productLicense.ProductNo}_{index}.pdf"), productLicense.ProductNo,
                         new System.Drawing.Point(450,25));
 
                     index++;
@@ -152,6 +172,18 @@ namespace ImportExport.Service.Services
                 CreatedDate = s.CreationTime
             }).ToList();
         }
+        private void CombineIntoOne(string outputFolder)
+        {
+            var files = GetFiles(outputFolder);
+            var filePaths = files
+                .OrderBy(o => o.CreatedDate)
+                .Select(s => s.Path)
+                .ToArray();
+            if(filePaths.Length > 0)
+            {
+                filePaths.MergePDFs($"{outputFolder}/AllInOne_{DateTime.Now.ToString("ddMMyyyy")}.pdf");
+            }
+        }
         public void ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
         {
             var files = GetFiles(sourceFolderPath);
@@ -164,6 +196,7 @@ namespace ImportExport.Service.Services
                 }
                 FindByProductName(productLicense, files, outputFolder);
             }
+            CombineIntoOne(outputFolder);
         }
     }
 }
