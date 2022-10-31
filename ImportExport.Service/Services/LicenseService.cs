@@ -196,7 +196,7 @@ namespace ImportExport.Service.Services
                 //}
                 FindByProductName(productLicense, files, outputFolder);
             }
-            CombineIntoOne(outputFolder);
+            //CombineIntoOne(outputFolder);
         }
     }
 }
