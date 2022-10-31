@@ -33,5 +33,11 @@ namespace ImportExport.API.Controllers
             path.AddTextToPdf(path,"1", new System.Drawing.Point(15,450));
             return Ok();
         }
+        [HttpGet("Compress")]
+        public ActionResult Compress(string path = @"C:\Users\giau.huynh.STS\Downloads\HS hoàn thuế 730305688120. Signed.pdf")
+        {
+            path.CompressPDF(@"C:\Users\giau.huynh.STS\Downloads\test.pdf");
+            return Ok();
+        }
     }
 }

@@ -137,7 +137,7 @@ namespace ImportExport.Service.Services
                     .ToList();
                 if (fileSearchPaths.Count > 0)
                 {
-                    var productLicensePath = Path.Combine(outputFolder, productLicense.ProductNo);
+                    var productLicensePath = outputFolder;// Path.Combine(outputFolder, productLicense.ProductNo);
                     var search = FindByLicenseNoAndDate(product, fileSearchPaths);
                     if(search.File == null)
                     {
@@ -189,11 +189,11 @@ namespace ImportExport.Service.Services
             var files = GetFiles(sourceFolderPath);
             foreach (var productLicense in productLicenses)
             {
-                var productLicensePath = Path.Combine(outputFolder, productLicense.ProductNo);
-                if (!Directory.Exists(productLicensePath))
-                {
-                    Directory.CreateDirectory(productLicensePath);
-                }
+                //var productLicensePath = Path.Combine(outputFolder, productLicense.ProductNo);
+                //if (!Directory.Exists(productLicensePath))
+                //{
+                //    Directory.CreateDirectory(productLicensePath);
+                //}
                 FindByProductName(productLicense, files, outputFolder);
             }
             CombineIntoOne(outputFolder);

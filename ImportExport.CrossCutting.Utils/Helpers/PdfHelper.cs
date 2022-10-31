@@ -117,38 +117,43 @@ namespace ImportExport.CrossCutting.Utils.Helpers
         public static bool MergePDFs(this IEnumerable<string> fileNames, string targetPdf)
         {
             bool merged = true;
-            using (FileStream stream = new FileStream(targetPdf, FileMode.Create))
+            using (MemoryStream stream = new())
             {
-                Document document = new Document();
-                PdfCopy pdf = new PdfCopy(document, stream);
-                PdfReader reader = null;
-                try
+                using (Document doc = new())
                 {
-                    document.Open();
-                    foreach (string file in fileNames)
+                    PdfCopy pdf = new PdfCopy(doc, stream);
+                    pdf.CloseStream = false;
+                    doc.Open();
+
+                    PdfReader reader = null;
+
+                    foreach (var file in fileNames)
                     {
                         reader = new PdfReader(file);
                         pdf.AddDocument(reader);
+                        pdf.FreeReader(reader);
                         reader.Close();
                     }
                 }
-                catch (Exception)
-                {
-                    merged = false;
-                    if (reader != null)
-                    {
-                        reader.Close();
-                    }
-                }
-                finally
-                {
-                    if (document != null)
-                    {
-                        document.Close();
-                    }
-                }
+                using FileStream streamX = new(targetPdf, FileMode.Create);
+                stream.WriteTo(streamX);
             }
             return merged;
+        }
+        public static void CompressPDF(this string inputPdfPath, string outputPdfPath)
+        {
+            //variables
+            string pathin = inputPdfPath;
+            string pathout = outputPdfPath;
+
+            using (PdfReader reader = new PdfReader(pathin))
+            {
+                reader.RemoveUnusedObjects();
+                using (PdfStamper stamper = new PdfStamper(reader, new FileStream(pathout, FileMode.Create)))
+                {
+                    stamper.SetFullCompression();
+                }
+            }
         }
     }
 }
