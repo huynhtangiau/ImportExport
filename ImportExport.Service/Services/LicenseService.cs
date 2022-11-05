@@ -20,6 +20,7 @@ namespace ImportExport.Service.Services
         }
         private string ReplaceManual(string productName)
         {
+            productName = Regex.Replace(productName, @"\(.*\)$", string.Empty);
             return productName.Replace("(SAMPLE)", string.Empty)
                         .Replace(@"/", string.Empty);
         }
@@ -64,6 +65,8 @@ namespace ImportExport.Service.Services
                         product.LicenseDate = licenseDates[index].Trim().ToDateFull();
                         index++;
                     }
+                    product.ProductName = product.ProductName.Trim();
+                    product.ProductNameV1 = product.ProductNameV1.Trim();
                 }
             }
             return productLicense;
@@ -111,14 +114,14 @@ namespace ImportExport.Service.Services
                 if(product.LicenseNo.ToLower() == pdfLicenseNo && product.LicenseDate == pdfLicenseDate)
                 {
                     return new SearchFileModel { 
-                        ResultKey = SearchResultKey.FirstItem,
+                        ResultKey = SearchResultKey.Found,
                         File = file
                     };
                 }
             }
             return new SearchFileModel
             {
-                ResultKey = SearchResultKey.Found,
+                ResultKey = SearchResultKey.FirstItem,
                 File = searchFiles.FirstOrDefault()
             };
         }
@@ -152,7 +155,7 @@ namespace ImportExport.Service.Services
                     {
                         newFileName = $"{productLicense.ProductNo}_{index}.pdf";
                     }
-                    search.File.Path.AddTextToPdf(Path.Combine(productLicensePath, $"{productLicense.ProductNo}_{index}.pdf"), productLicense.ProductNo,
+                    search.File.Path.AddTextToPdf(Path.Combine(productLicensePath, newFileName), productLicense.ProductNo,
                         new System.Drawing.Point(450,25));
 
                     index++;
