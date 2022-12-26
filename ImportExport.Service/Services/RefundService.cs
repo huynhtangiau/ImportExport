@@ -95,6 +95,7 @@ namespace ImportExport.Service.Services
                 wordDoc.GetMergeFields("VATMustPayAmount").ReplaceWithText(taxDeclaration.VATMustPayAmount);
 
                 wordDoc.GetMergeFields("RegisterDate").ReplaceWithText(taxDeclaration.RegisterDate);
+                wordDoc.GetMergeFields("TodayDate").ReplaceWithText(DateTime.Now.ToString("yyyy/MM/dd"));
 
                 wordDoc.MainDocumentPart.Document.Save();
                 wordDoc.SaveAs(Path.Combine(outputFolder, $"CV HOÀN THUẾ_{taxDeclaration.RefundTaxId}.docx")).Close();
