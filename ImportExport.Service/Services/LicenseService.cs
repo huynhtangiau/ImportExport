@@ -31,27 +31,27 @@ namespace ImportExport.Service.Services
             var items = worksheet.Cells[rowIndex, 7].Text;
             if (!string.IsNullOrWhiteSpace(items))
             {
+                var pcsPattern = @"SET.*[0-9\s]+PCS.*";
                 productLicense.Items = items.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
+                    .Where(q => !Regex.IsMatch(q, pcsPattern) && !string.IsNullOrWhiteSpace(q))
                     .Select(s => new ProductModel { ProductName = s.Trim(), RawName = s.Trim() })
                     .ToList();
                 var pattern = @"[0-9]+[\s]*ML.*";
-                var pcsPattern = @"SET.*[0-9\s]+PCS.*";
                 var noPattern = @"NO\.[0-9]+.*";
 
                 var licenseDates = worksheet.Cells[rowIndex, 4].Text.Replace("NGÀY", string.Empty)
-                    .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
+                    .Where(q => !string.IsNullOrWhiteSpace(q))
+                    .ToArray();
 
                 var licenseNos = worksheet.Cells[rowIndex, 3].Text
-                    .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None);
+                    .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
+                    .Where(q => !string.IsNullOrWhiteSpace(q))
+                    .ToArray();
 
                 var index = 0;
                 foreach (var product in productLicense.Items)
                 {
-                    if (Regex.IsMatch(product.ProductName, pcsPattern))
-                    {
-                        product.ProductNameV1 = string.Empty;
-                        continue;
-                    }
                     product.ProductName = Regex.Replace(product.ProductName, pattern, string.Empty)
                         .Trim();
                     product.ProductName = Regex.Replace(product.ProductName, noPattern, string.Empty).Trim();
