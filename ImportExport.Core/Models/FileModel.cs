@@ -12,5 +12,6 @@ namespace ImportExport.Core.Models
         public string Path { get; set; }
         public string Extension { get; set; }
         public DateTime CreatedDate { get; set; }
+        public byte[] FileStream { get; set; }
     }
 }

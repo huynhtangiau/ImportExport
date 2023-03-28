@@ -172,7 +172,8 @@ namespace ImportExport.Service.Services
                 FileName = s.Name,
                 Path = s.FullName,
                 Extension = s.Extension,
-                CreatedDate = s.CreationTime
+                CreatedDate = s.CreationTime,
+                FileStream = File.ReadAllBytes(s.FullName)
             }).ToList();
         }
         private void CombineIntoOne(string outputFolder)
@@ -187,19 +188,33 @@ namespace ImportExport.Service.Services
                 filePaths.MergePDFs($"{outputFolder}/AllInOne_{DateTime.Now.ToString("ddMMyyyy")}.pdf");
             }
         }
-        public void ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
+        private FileModel ExportAndCompress(string outputFolder)
         {
+            var files = GetFiles(outputFolder);
+            return new FileModel()
+            {
+                FileName = $"PCB_{DateTime.Now.ToString("yyyyMMdd")}.zip",
+                Extension = "application/zip",
+                FileStream = files.Compress()
+            };
+        }
+        private void DeleteOldFiles(string outputFolder)
+        {
+            var oldFiles = new DirectoryInfo(outputFolder).GetFiles("*.pdf", SearchOption.AllDirectories);
+            foreach (var file in oldFiles)
+            {
+                file.Delete();
+            }
+        }
+        public FileModel ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
+        {
+            DeleteOldFiles(outputFolder);
             var files = GetFiles(sourceFolderPath);
             foreach (var productLicense in productLicenses)
             {
-                //var productLicensePath = Path.Combine(outputFolder, productLicense.ProductNo);
-                //if (!Directory.Exists(productLicensePath))
-                //{
-                //    Directory.CreateDirectory(productLicensePath);
-                //}
                 FindByProductName(productLicense, files, outputFolder);
             }
-            //CombineIntoOne(outputFolder);
+            return ExportAndCompress(outputFolder);
         }
     }
 }
