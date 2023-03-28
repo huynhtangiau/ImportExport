@@ -31,6 +31,9 @@ namespace ImportExport.API
             services.ServicesRegister();
             services.Configure<TaxRefundSettings>(options =>
                 Configuration.GetSection(AppSettingKeys.TaxRefund).Bind(options));
+            services.Configure<LicenseSettings>(options =>
+                Configuration.GetSection(AppSettingKeys.License).Bind(options));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

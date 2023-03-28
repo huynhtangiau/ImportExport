@@ -10,6 +10,6 @@ namespace ImportExport.Service.Interfaces
     public interface ILicenseService
     {
         List<ProductLicenseModel> ReadData(string productsExcelPath);
-        FileModel ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder);
+        void ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder);
     }
 }

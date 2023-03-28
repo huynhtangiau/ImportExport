@@ -24,8 +24,8 @@ namespace ImportExport.API.Controllers
             string outputFolder = @"C:\Users\giau.huynh.STS\Giau\Support\LICENSE\Test")
         {
             var productLicenses = _licenseService.ReadData(productsExcelPath);
-            var result =  _licenseService.ExportIntoFolder(productLicenses, sourceFolder, outputFolder);
-            return File(result.FileStream, result.Extension, result.FileName);
+            _licenseService.ExportIntoFolder(productLicenses, sourceFolder, outputFolder);
+            return Ok();
         }
         [HttpGet]
         public ActionResult Test(string path = @"/Users/giauht/Downloads/123.pdf")

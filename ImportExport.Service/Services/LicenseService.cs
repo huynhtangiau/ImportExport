@@ -1,6 +1,10 @@
-﻿using ImportExport.Core.Models;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using ImportExport.Core.CrossCutting.Settings;
+using ImportExport.Core.Models;
 using ImportExport.CrossCutting.Utils.Helpers;
 using ImportExport.Service.Interfaces;
+using iTextSharp.text.pdf;
+using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
@@ -12,39 +16,65 @@ using System.Threading.Tasks;
 
 namespace ImportExport.Service.Services
 {
-    public class LicenseService: BaseService, ILicenseService
+    public class LicenseService : BaseService, ILicenseService
     {
-        public LicenseService()
+        private readonly IOptions<LicenseSettings> _licenseSettings;
+        private readonly ColumnIndexSettings columnIndex;
+        public LicenseService(IOptions<LicenseSettings> licenseSettings)
         {
-
+            _licenseSettings = licenseSettings;
+            columnIndex = _licenseSettings.Value.ColumnIndex;
         }
-        private string ReplaceManual(string productName)
+        private List<ProductModel> RemoveSetPCS(string products)
         {
-            productName = Regex.Replace(productName, @"\(.*\)$", string.Empty);
-            return productName.Replace("(SAMPLE)", string.Empty)
-                        .Replace(@"/", string.Empty);
-        }
-        private ProductLicenseModel TransformItem(ExcelWorksheet worksheet, int rowIndex)
-        {
-            var productLicense = new ProductLicenseModel();
-            productLicense.ProductNo = worksheet.Cells[rowIndex, 2].Text;
-            var items = worksheet.Cells[rowIndex, 7].Text;
-            if (!string.IsNullOrWhiteSpace(items))
+            var pcsPatterns = new string[]
             {
-                var pcsPattern = @"SET.*[0-9\s]+PCS.*";
-                productLicense.Items = items.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
-                    .Where(q => !Regex.IsMatch(q, pcsPattern) && !string.IsNullOrWhiteSpace(q))
+                @"SET.*[0-9\s]+PCS.*",
+                @".*[0-9\s]+PCS.*"
+            };
+            return products.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
+                    .Where(q => !pcsPatterns.Any(a => Regex.IsMatch(q, a)) && !string.IsNullOrWhiteSpace(q))
                     .Select(s => new ProductModel { ProductName = s.Trim(), RawName = s.Trim() })
                     .ToList();
-                var pattern = @"[0-9]+[\s]*ML.*";
-                var noPattern = @"NO\.[0-9]+.*";
+        }
+        private string RemoveInvalidCharacters(string productName)
+        {
+            var removePatterns = new string[]
+            {
+                @"[0-9]+[\s]*ML.*",
+                @"NO\.[0-9]+.*",
+                @"\(.*\)$"
+            };
+            foreach(var pattern in removePatterns)
+            {
+                productName = Regex.Replace(productName, pattern, string.Empty);
+            }
+            var replacers = new string[]
+            {
+                "(SAMPLE)",
+                @"/"
+            };
+            foreach(var pattern in replacers)
+            {
+                productName = productName.Replace(pattern, string.Empty);
+            }
+            return productName.Trim();
+        }
+        private  ProductLicenseModel TransformItem(ExcelWorksheet worksheet, int rowIndex)
+        {
+            var productLicense = new ProductLicenseModel();
+            productLicense.ProductNo = worksheet.Cells[rowIndex, columnIndex.ProductNo].Text;
+            var items = worksheet.Cells[rowIndex, columnIndex.Product].Text;
+            if (!string.IsNullOrWhiteSpace(items))
+            {
+                productLicense.Items = RemoveSetPCS(items);
 
-                var licenseDates = worksheet.Cells[rowIndex, 4].Text.Replace("NGÀY", string.Empty)
+                var licenseDates = worksheet.Cells[rowIndex, columnIndex.LicenseDate].Text.Replace("NGÀY", string.Empty)
                     .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
                     .Where(q => !string.IsNullOrWhiteSpace(q))
                     .ToArray();
 
-                var licenseNos = worksheet.Cells[rowIndex, 3].Text
+                var licenseNos = worksheet.Cells[rowIndex, columnIndex.LicenseNo].Text
                     .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
                     .Where(q => !string.IsNullOrWhiteSpace(q))
                     .ToArray();
@@ -52,13 +82,10 @@ namespace ImportExport.Service.Services
                 var index = 0;
                 foreach (var product in productLicense.Items)
                 {
-                    product.ProductName = Regex.Replace(product.ProductName, pattern, string.Empty)
-                        .Trim();
-                    product.ProductName = Regex.Replace(product.ProductName, noPattern, string.Empty).Trim();
+                    product.ProductName = RemoveInvalidCharacters(product.ProductName);
                     product.ProductNameV1 = product.ProductName.Replace(":", " ");
                     product.ProductName = product.ProductName.Replace(":", string.Empty);
-                    product.ProductNameV1 = ReplaceManual(product.ProductNameV1);
-                    product.ProductName = ReplaceManual(product.ProductName);
+
                     if (productLicense.Items.Count <= licenseNos.Length + 1)
                     {
                         product.LicenseNo = licenseNos[index].Trim();
@@ -132,6 +159,11 @@ namespace ImportExport.Service.Services
                 return;
             }
             var index = 1;
+            var newPCBFolder = Path.Combine(outputFolder, $"PCB_{DateTime.Now.ToString("yyyyMMdd")}");
+            if (!Directory.Exists(newPCBFolder)) {
+                Directory.CreateDirectory(newPCBFolder);
+            }
+
             foreach (var product in productLicense.Items)
             {
                 var fileSearchPaths = files.Where(q => q.FileName.ToLower().Contains(product.ProductName.ToLower())
@@ -140,7 +172,7 @@ namespace ImportExport.Service.Services
                     .ToList();
                 if (fileSearchPaths.Count > 0)
                 {
-                    var productLicensePath = outputFolder;// Path.Combine(outputFolder, productLicense.ProductNo);
+                    var productLicensePath = newPCBFolder;// Path.Combine(outputFolder, productLicense.ProductNo);
                     var search = FindByLicenseNoAndDate(product, fileSearchPaths);
                     if(search.File == null)
                     {
@@ -190,7 +222,8 @@ namespace ImportExport.Service.Services
         }
         private FileModel ExportAndCompress(string outputFolder)
         {
-            var files = GetFiles(outputFolder);
+            var outputFilesPath = Path.Combine(outputFolder, $"PCB_{DateTime.Now.ToString("yyyyMMdd")}");
+            var files = GetFiles(outputFilesPath);
             return new FileModel()
             {
                 FileName = $"PCB_{DateTime.Now.ToString("yyyyMMdd")}.zip",
@@ -206,7 +239,7 @@ namespace ImportExport.Service.Services
                 file.Delete();
             }
         }
-        public FileModel ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
+        public void ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
         {
             DeleteOldFiles(outputFolder);
             var files = GetFiles(sourceFolderPath);
@@ -214,7 +247,8 @@ namespace ImportExport.Service.Services
             {
                 FindByProductName(productLicense, files, outputFolder);
             }
-            return ExportAndCompress(outputFolder);
+            var file = ExportAndCompress(outputFolder);
+            File.WriteAllBytes(Path.Combine(outputFolder, file.FileName), file.FileStream);
         }
     }
 }
