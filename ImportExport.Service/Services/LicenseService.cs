@@ -30,7 +30,9 @@ namespace ImportExport.Service.Services
             var pcsPatterns = new string[]
             {
                 @"SET.*[0-9\s]+PCS.*",
-                @".*[0-9\s]+PCS.*"
+                @".*[0-9\s]+PCS.*",
+                @"set.*[0-9\s]+pcs.*",
+                @".*[0-9\s]+pcs.*"
             };
             return products.Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
                     .Where(q => !pcsPatterns.Any(a => Regex.IsMatch(q, a)) && !string.IsNullOrWhiteSpace(q))
