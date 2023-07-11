@@ -2,6 +2,8 @@
 using ImportExport.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 
 namespace ImportExport.API.Controllers
 {
@@ -24,7 +26,11 @@ namespace ImportExport.API.Controllers
             string outputFolder = @"C:\Users\giau.huynh.STS\Giau\Support\LICENSE\Test")
         {
             var productLicenses = _licenseService.ReadData(productsExcelPath);
-            _licenseService.ExportIntoFolder(productLicenses, sourceFolder, outputFolder);
+            var success = _licenseService.ExportIntoFolder(productLicenses, sourceFolder, outputFolder);
+            if (success)
+            {
+                System.IO.File.Copy(productsExcelPath, Path.Combine(outputFolder, $"Product_{DateTime.Now.ToString("yyyyMMdd")}.xlsx"), true);
+            }
             return Ok();
         }
         [HttpGet]

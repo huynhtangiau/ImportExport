@@ -241,7 +241,7 @@ namespace ImportExport.Service.Services
                 file.Delete();
             }
         }
-        public void ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
+        public bool ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
         {
             DeleteOldFiles(outputFolder);
             var files = GetFiles(sourceFolderPath);
@@ -251,6 +251,7 @@ namespace ImportExport.Service.Services
             }
             var file = ExportAndCompress(outputFolder);
             File.WriteAllBytes(Path.Combine(outputFolder, file.FileName), file.FileStream);
+            return file != null;
         }
     }
 }
