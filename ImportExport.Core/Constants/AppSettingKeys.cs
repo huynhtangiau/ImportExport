@@ -5,5 +5,6 @@ namespace ImportExport.Core.Constants
     {
         public const string TaxRefund = "TaxRefund";
         public const string License = "License";
+        public const string GrossWeight = "GrossWeight";
     }
 }

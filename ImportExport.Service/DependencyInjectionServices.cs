@@ -11,7 +11,8 @@ namespace ImportExport.Service
         {
             services.AddScoped<IRefundService, RefundService>();
             services.AddScoped<ILicenseService, LicenseService>();
-            
+            services.AddScoped<IValidationService, ValidationService>();
+
         }
     }
 }

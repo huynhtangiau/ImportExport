@@ -39,5 +39,18 @@ namespace ImportExport.CrossCutting.Utils.Helpers
             }
             return entry;
         }
+        public static List<FileModel> GetFiles(this string sourceFolderPath)
+        {
+            var dir = new DirectoryInfo(sourceFolderPath);
+            var files = dir.GetFiles("*.pdf", SearchOption.AllDirectories);
+            return files.Select(s => new FileModel()
+            {
+                FileName = s.Name,
+                Path = s.FullName,
+                Extension = s.Extension,
+                CreatedDate = s.CreationTime,
+                FileStream = File.ReadAllBytes(s.FullName)
+            }).ToList();
+        }
     }
 }

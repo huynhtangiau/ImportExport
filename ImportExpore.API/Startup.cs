@@ -33,6 +33,8 @@ namespace ImportExport.API
                 Configuration.GetSection(AppSettingKeys.TaxRefund).Bind(options));
             services.Configure<LicenseSettings>(options =>
                 Configuration.GetSection(AppSettingKeys.License).Bind(options));
+            services.Configure<GrossWeightSettings>(options =>
+                Configuration.GetSection(AppSettingKeys.GrossWeight).Bind(options));
             
         }
 
