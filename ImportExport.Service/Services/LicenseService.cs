@@ -3,7 +3,6 @@ using ImportExport.Core.CrossCutting.Settings;
 using ImportExport.Core.Models;
 using ImportExport.CrossCutting.Utils.Helpers;
 using ImportExport.Service.Interfaces;
-using iTextSharp.text.pdf;
 using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using System;
@@ -190,7 +189,7 @@ namespace ImportExport.Service.Services
                         newFileName = $"{productLicense.ProductNo}_{index}.pdf";
                     }
                     search.File.Path.AddTextToPdf(Path.Combine(productLicensePath, newFileName), productLicense.ProductNo,
-                        new System.Drawing.Point(450,25));
+                        500);
 
                     index++;
 

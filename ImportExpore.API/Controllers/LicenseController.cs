@@ -34,15 +34,9 @@ namespace ImportExport.API.Controllers
             return Ok();
         }
         [HttpGet]
-        public ActionResult Test(string path = @"/Users/giauht/Downloads/123.pdf")
+        public ActionResult Test(string path = @"C:\Users\giau.huynh.STS\Downloads\123.pdf", int x = 450)
         {
-            path.AddTextToPdf(path,"1", new System.Drawing.Point(15,450));
-            return Ok();
-        }
-        [HttpGet("Compress")]
-        public ActionResult Compress(string path = @"C:\Users\giau.huynh.STS\Downloads\HS hoàn thuế 730305688120. Signed.pdf")
-        {
-            path.CompressPDF(@"C:\Users\giau.huynh.STS\Downloads\test.pdf");
+            path.AddTextToPdf(@"C:\Users\giau.huynh.STS\Downloads\123_output.pdf", "1", x);
             return Ok();
         }
     }

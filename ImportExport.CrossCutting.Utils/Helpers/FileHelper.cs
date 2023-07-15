@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ImportExport.CrossCutting.Utils.Helpers
 {
-    public static class FileHepler
+    public static class FileHelper
     {
         public static byte[] Compress(this IEnumerable<FileModel> files)
         {

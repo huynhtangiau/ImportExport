@@ -1,13 +1,21 @@
-﻿using iTextSharp.text;
-using iTextSharp.text.pdf;
-using iTextSharp.text.pdf.parser;
-using iTextSharp.text.pdf.security;
+﻿
+using iText.Forms;
+using iText.Forms.Fields;
+using iText.Kernel.Font;
+using iText.Kernel.Pdf;
+using iText.Kernel.Pdf.Canvas;
+using iText.Kernel.Pdf.Canvas.Parser;
+using iText.Kernel.Pdf.Canvas.Parser.Listener;
+using iText.Kernel.Utils;
+using iText.Layout;
+using iText.Layout.Element;
+using iText.Signatures;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ImportExport.CrossCutting.Utils.Helpers
 {
@@ -15,145 +23,82 @@ namespace ImportExport.CrossCutting.Utils.Helpers
     {
         public static string ReadPdfContent(this string path)
         {
-            StringBuilder text = new StringBuilder();
+            var text = new StringBuilder();
 
-            if (System.IO.File.Exists(path))
+            if (File.Exists(path))
             {
-                PdfReader pdfReader = new PdfReader(path);
-
-                for (int page = 1; page <= pdfReader.NumberOfPages; page++)
+                var pdfDocument = new PdfDocument(new PdfReader(path));
+                for (int pageIndex = 1; pageIndex <= pdfDocument.GetNumberOfPages(); pageIndex++)
                 {
-                    ITextExtractionStrategy strategy = new SimpleTextExtractionStrategy();
-                    string currentText = PdfTextExtractor.GetTextFromPage(pdfReader, page, strategy);
+                    var strategy = new SimpleTextExtractionStrategy();
+                    var page = pdfDocument.GetPage(pageIndex);
+                    var currentText = PdfTextExtractor.GetTextFromPage(page, strategy);
 
                     currentText = Encoding.UTF8.GetString(ASCIIEncoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(currentText)));
                     text.Append(currentText);
                 }
-                pdfReader.Close();
             }
             return text.ToString();
         }
-        public static void AddTextToPdf(this string inputPdfPath, string outputPdfPath, string textToAdd, System.Drawing.Point point)
+        public static string WriteTextAfterFoundPosition(PdfReader pdfReader, string search)
         {
-            //variables
-            string pathin = inputPdfPath;
-            string pathout = outputPdfPath;
-
-            //create PdfReader object to read from the existing document
-            using (PdfReader reader = new PdfReader(pathin))
-            //create PdfStamper object to write to get the pages from reader 
-            using (PdfStamper stamper = new PdfStamper(reader, new FileStream(pathout, FileMode.Create)))
-            {
-                //select two pages from the original document
-                reader.SelectPages("1-1");
-
-                //gettins the page size in order to substract from the iTextSharp coordinates
-                var pageSize = reader.GetPageSize(1);
-
-                // PdfContentByte from stamper to add content to the pages over the original content
-                PdfContentByte pbover = stamper.GetOverContent(1);
-
-                //add content to the page using ColumnText
-                Font font = new Font();
-                font.Size = 14;
-
-                //setting up the X and Y coordinates of the document
-                int x = point.X;
-                int y = point.Y;
-
-                y = (int)(pageSize.Height - y);
-
-                ColumnText.ShowTextAligned(pbover, Element.ALIGN_CENTER, new Phrase(textToAdd, font), x, y, 0);
-            }
+            var text = new StringBuilder();
+            return text.ToString();
         }
-        public static String extractText(PdfStream xObject)
+        public static void AddTextToPdf(this string inputPdfPath, string outputPdfPath, string textToAdd, int x)
         {
-            PdfDictionary resources = xObject.GetAsDict(PdfName.RESOURCES);
-            ITextExtractionStrategy strategy = new LocationTextExtractionStrategy();
+            var pdfDocument = new PdfDocument(new PdfReader(inputPdfPath));
+            var pdf = new PdfDocument(new PdfWriter(outputPdfPath));
 
-            PdfContentStreamProcessor processor = new PdfContentStreamProcessor(strategy);
-            processor.ProcessContent(ContentByteUtils.GetContentBytesFromContentObject(xObject), resources);
-            return strategy.GetResultantText();
+            pdfDocument.CopyPagesTo(1, 1, pdf, 1);
+
+            var d = new Document(pdf);
+
+            var y = pdf.GetFirstPage().GetMediaBox().GetHeight() - 80;
+            var p = new Paragraph(textToAdd).SetFontSize(14);
+            p.SetFixedPosition(1, x, y, 200);
+            d.Add(p);
+
+            pdf.Close();
         }
         public static string ReadSignatureContent(this string path)
         {
-            StringBuilder sb = new StringBuilder();
-            PdfReader reader = new PdfReader(path);
-            AcroFields fields = reader.AcroFields;
-            foreach (string name in fields.GetSignatureNames())
-            {
-                iTextSharp.text.pdf.AcroFields.Item item = fields.GetFieldItem(name);
-                PdfDictionary widget = item.GetWidget(0);
-                PdfDictionary ap = widget.GetAsDict(PdfName.AP);
-                if (ap == null)
-                    continue;
-                PdfStream normal = ap.GetAsStream(PdfName.N);
-                if (normal == null)
-                    continue;
-               return extractText(normal);
+            var sb = new StringBuilder();
 
-                PdfDictionary resources = normal.GetAsDict(PdfName.RESOURCES);
-                if (resources == null)
-                    continue;
-                PdfDictionary xobject = resources.GetAsDict(PdfName.XOBJECT);
-                if (xobject == null)
-                    continue;
-                PdfStream frm = xobject.GetAsStream(PdfName.FRM);
-                if (frm == null)
-                    continue;
-                PdfDictionary res = frm.GetAsDict(PdfName.RESOURCES);
-                if (res == null)
-                    continue;
-                PdfDictionary xobj = res.GetAsDict(PdfName.XOBJECT);
-                if (xobj == null)
-                    continue;
-                PRStream n2 = (PRStream)xobj.GetAsStream(PdfName.N2);
-                if (n2 == null)
-                    continue;
-                return extractText(n2);
+            var reader = new PdfReader(path);
+            var pdfDocument = new PdfDocument(reader);
+            var signatureUtil = new SignatureUtil(pdfDocument);
+
+            var acroForm = PdfAcroForm.GetAcroForm(pdfDocument, false);
+
+            foreach (string name in signatureUtil.GetSignatureNames())
+            {
+                var signatorySignature = acroForm.GetField(name);
+                var appearanceDic = signatorySignature.GetPdfObject().GetAsDictionary(PdfName.AP);
+
+                var pdfStream = appearanceDic.GetAsStream(PdfName.N);
+
+                var strategy = new LocationTextExtractionStrategy();
+                var resourcesDic = pdfStream.GetAsDictionary(PdfName.Resources);
+                var processor = new PdfCanvasProcessor(strategy);
+                processor.ProcessContent(pdfStream.GetBytes(), new PdfResources(resourcesDic));
+
+                sb.Append(strategy.GetResultantText());
             }
-            return string.Empty;
+            return sb.ToString();
         }
         public static bool MergePDFs(this IEnumerable<string> fileNames, string targetPdf)
         {
-            bool merged = true;
-            using (MemoryStream stream = new())
+            var pdf = new PdfDocument(new PdfWriter(targetPdf));
+            var merger = new PdfMerger(pdf);
+            foreach(var fileName in fileNames)
             {
-                using (Document doc = new())
-                {
-                    PdfCopy pdf = new PdfCopy(doc, stream);
-                    pdf.CloseStream = false;
-                    doc.Open();
-
-                    PdfReader reader = null;
-
-                    foreach (var file in fileNames)
-                    {
-                        reader = new PdfReader(file);
-                        pdf.AddDocument(reader);
-                        pdf.FreeReader(reader);
-                        reader.Close();
-                    }
-                }
-                using FileStream streamX = new(targetPdf, FileMode.Create);
-                stream.WriteTo(streamX);
+                var sourcePdf = new PdfDocument(new PdfReader(fileName));
+                merger.Merge(sourcePdf, 1, sourcePdf.GetNumberOfPages());
+                sourcePdf.Close();
             }
-            return merged;
-        }
-        public static void CompressPDF(this string inputPdfPath, string outputPdfPath)
-        {
-            //variables
-            string pathin = inputPdfPath;
-            string pathout = outputPdfPath;
-
-            using (PdfReader reader = new PdfReader(pathin))
-            {
-                reader.RemoveUnusedObjects();
-                using (PdfStamper stamper = new PdfStamper(reader, new FileStream(pathout, FileMode.Create)))
-                {
-                    stamper.SetFullCompression();
-                }
-            }
+            pdf.Close();
+            return true;
         }
     }
 }
