@@ -128,15 +128,21 @@ namespace ImportExport.CrossCutting.Utils.Helpers
                 var canvas = new PdfCanvas(page);
                 foreach(var item in pageItems)
                 {
-                    canvas.SaveState()
-                        .BeginText()
-                        .MoveText(item.X, item.Y - item.Height)
-                        .SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_BOLDITALIC), 7)
-                        .SetFillColorRgb(255, 0 , 0)
-                        .SetStrokeColorRgb(0,0, 255)
-                        .ShowText(item.Value)
-                        .EndText()
-                        .RestoreState();
+                    var values = item.Value.EnumByNearestSpace(35);
+                    var height = item.Y - item.Height;
+                    foreach (var value in values)
+                    {
+                        canvas.SaveState()
+                            .BeginText()
+                            .MoveText(item.X, height)
+                            .SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_BOLDITALIC), 7)
+                            .SetFillColorRgb(255, 0, 0)
+                            .SetStrokeColorRgb(0, 0, 255)
+                            .NewlineShowText(value)
+                            .EndText()
+                            .RestoreState();
+                        height -= item.Height;
+                    }
                 }
                 canvas.Release();
 
