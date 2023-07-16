@@ -23,10 +23,13 @@ namespace ImportExport.API.Controllers
             string outputFolder = @"C:\Users\giau.huynh.STS\Giau\Support\Validation\Output")
         {
             var grossWeights = _validationService.GetMasterData(sourceFile);
-            System.IO.File.Copy(sourceFile, System.IO.Path.Combine(
-                 System.IO.Path.GetDirectoryName(sourceFile), 
-                 $"{System.IO.Path.GetFileNameWithoutExtension(sourceFile)}_{DateTime.Now.ToString("yyyyMMdd")}.{System.IO.Path.GetExtension(sourceFile)}"
-                ));
+            var backupFile = System.IO.Path.Combine(
+                 System.IO.Path.GetDirectoryName(sourceFile),
+                 $"{System.IO.Path.GetFileNameWithoutExtension(sourceFile)}_{DateTime.Now.ToString("yyyyMMddHHmm")}.{System.IO.Path.GetExtension(sourceFile)}"
+                );
+            if (!System.IO.File.Exists(backupFile)) {
+                System.IO.File.Copy(sourceFile, backupFile);
+            }
             var success = _validationService.Validate(grossWeights, sourceFolder, outputFolder);
             return Ok(success);
         }

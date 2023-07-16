@@ -31,8 +31,8 @@ namespace ImportExport.Service.Services
             using (var package = new ExcelPackage(sourceFile))
             {
                 var worksheet = package.Workbook.Worksheets[0];
-                int rowCount = worksheet.Dimension.End.Row+1;
-                for (var i = 3; i < rowCount; i++)
+                int rowCount = worksheet.Dimension.End.Row;
+                for (var i = 2; i < rowCount; i++)
                 {
                     var grossWeight = TransformItem(worksheet, i);
                     grossWeights.Add(grossWeight);

@@ -120,12 +120,6 @@ namespace ImportExport.CrossCutting.Utils.Helpers
             pdfDocument.CopyPagesTo(1, pdfDocument.GetNumberOfPages(), pdf, 1);
             var items = texts.Values.SelectMany(s => s).ToList();
 
-            var space =  PdfColorSpace.MakeColorSpace(PdfName.DeviceRGB
-               );
-            var colorValue1 =  new float[] { 1.0f, 0.6f, 0.7f };
-            var pattern1 = new PdfPattern.Shading(new PdfShading.Axial(new PdfDeviceCs.Rgb(), 45, 750
-                , ColorConstants.RED.GetColorValue(), 100, 760, ColorConstants.RED.GetColorValue())) ;
-
 
             for (int pageNum = 1; pageNum <= pdf.GetNumberOfPages(); pageNum++)
             {
@@ -137,8 +131,9 @@ namespace ImportExport.CrossCutting.Utils.Helpers
                     canvas.SaveState()
                         .BeginText()
                         .MoveText(item.X, item.Y - item.Height)
-                        .SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_BOLDITALIC), 4)
-                        .SetColor(space, colorValue1, pattern1, true)
+                        .SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_BOLDITALIC), 7)
+                        .SetFillColorRgb(255, 0 , 0)
+                        .SetStrokeColorRgb(0,0, 255)
                         .ShowText(item.Value)
                         .EndText()
                         .RestoreState();
