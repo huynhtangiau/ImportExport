@@ -24,7 +24,7 @@ namespace ImportExport.API.Controllers
         {
             var grossWeights = _validationService.GetMasterData(sourceFile);
             var backupFile = System.IO.Path.Combine(
-                 System.IO.Path.GetDirectoryName(sourceFile),
+                 $@"{System.IO.Path.GetDirectoryName(sourceFile)}\backup",
                  $"{System.IO.Path.GetFileNameWithoutExtension(sourceFile)}_{DateTime.Now.ToString("yyyyMMddHHmm")}.{System.IO.Path.GetExtension(sourceFile)}"
                 );
             if (!System.IO.File.Exists(backupFile)) {
