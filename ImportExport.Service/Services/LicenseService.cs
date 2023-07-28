@@ -196,22 +196,9 @@ namespace ImportExport.Service.Services
                 }
             }
         }
-        private List<FileModel> GetFiles(string sourceFolderPath)
-        {
-            var dir = new DirectoryInfo(sourceFolderPath);
-            var files = dir.GetFiles("*.pdf", SearchOption.AllDirectories);
-            return files.Select(s => new FileModel()
-            {
-                FileName = s.Name,
-                Path = s.FullName,
-                Extension = s.Extension,
-                CreatedDate = s.CreationTime,
-                FileStream = File.ReadAllBytes(s.FullName)
-            }).ToList();
-        }
         private void CombineIntoOne(string outputFolder)
         {
-            var files = GetFiles(outputFolder);
+            var files = outputFolder.GetFiles();
             var filePaths = files
                 .OrderBy(o => o.CreatedDate)
                 .Select(s => s.Path)
@@ -221,36 +208,16 @@ namespace ImportExport.Service.Services
                 filePaths.MergePDFs($"{outputFolder}/AllInOne_{DateTime.Now.ToString("ddMMyyyy")}.pdf");
             }
         }
-        private FileModel ExportAndCompress(string outputFolder)
-        {
-            var outputFilesPath = Path.Combine(outputFolder, $"PCB_{DateTime.Now.ToString("yyyyMMdd")}");
-            var files = GetFiles(outputFilesPath);
-            return new FileModel()
-            {
-                FileName = $"PCB_{DateTime.Now.ToString("yyyyMMdd")}.zip",
-                Extension = "application/zip",
-                FileStream = files.Compress()
-            };
-        }
-        private void DeleteOldFiles(string outputFolder)
-        {
-            var oldFiles = new DirectoryInfo(outputFolder).GetFiles("*.pdf", SearchOption.AllDirectories);
-            foreach (var file in oldFiles)
-            {
-                file.Delete();
-            }
-        }
         public bool ExportIntoFolder(List<ProductLicenseModel> productLicenses, string sourceFolderPath, string outputFolder)
         {
-            DeleteOldFiles(outputFolder);
-            var files = GetFiles(sourceFolderPath);
+            outputFolder.DeleteFiles();
+            var files = sourceFolderPath.GetFiles();
             foreach (var productLicense in productLicenses)
             {
                 FindByProductName(productLicense, files, outputFolder);
             }
-            var file = ExportAndCompress(outputFolder);
-            File.WriteAllBytes(Path.Combine(outputFolder, file.FileName), file.FileStream);
-            return file != null;
+            outputFolder.Compress($"PCB_{DateTime.Now.ToString("yyyyMMdd")}.zip", "*.pdf");
+            return true;
         }
     }
 }

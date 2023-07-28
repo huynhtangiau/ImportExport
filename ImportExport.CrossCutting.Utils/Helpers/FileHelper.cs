@@ -39,10 +39,10 @@ namespace ImportExport.CrossCutting.Utils.Helpers
             }
             return entry;
         }
-        public static List<FileModel> GetFiles(this string sourceFolderPath)
+        public static List<FileModel> GetFiles(this string sourceFolderPath, string pattern = "*.pdf")
         {
             var dir = new DirectoryInfo(sourceFolderPath);
-            var files = dir.GetFiles("*.pdf", SearchOption.AllDirectories);
+            var files = dir.GetFiles(pattern, SearchOption.AllDirectories);
             return files.Select(s => new FileModel()
             {
                 FileName = s.Name,
@@ -51,6 +51,19 @@ namespace ImportExport.CrossCutting.Utils.Helpers
                 CreatedDate = s.CreationTime,
                 FileStream = File.ReadAllBytes(s.FullName)
             }).ToList();
+        }
+        public static void Compress(this string sourceFolderPath, string outputFileName, string pattern = "*.docx")
+        {
+            File.WriteAllBytes(Path.Combine(sourceFolderPath, outputFileName), sourceFolderPath.GetFiles(pattern).Compress());
+        }
+        public static void DeleteFiles(this string sourceFolderPath, string pattern = "*.pdf")
+        {
+            var dir = new DirectoryInfo(sourceFolderPath);
+            var files = dir.GetFiles(pattern, SearchOption.AllDirectories);
+            foreach (var file in files)
+            {
+                file.Delete();
+            }
         }
     }
 }

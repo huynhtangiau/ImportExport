@@ -1,6 +1,7 @@
 ﻿using ImportExport.CrossCutting.Utils.Helpers;
 using ImportExport.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -67,6 +68,7 @@ namespace ImportExport.API.Controllers
                 _refundService.TranformData(taxDeclaration, pdfContent);
 
                 _refundService.ExportData(taxDeclaration, outputFolder);
+                outputFolder.Compress($"TaxRefund_{DateTime.Now.ToString("yyyyMMdd")}.zip");
             }
             return Ok();
         }
