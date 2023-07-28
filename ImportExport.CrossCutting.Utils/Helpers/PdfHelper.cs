@@ -12,6 +12,7 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Pdf.Canvas.Parser;
 using iText.Kernel.Pdf.Canvas.Parser.Listener;
 using iText.Kernel.Pdf.Colorspace;
+using iText.Kernel.Pdf.Extgstate;
 using iText.Kernel.Utils;
 using iText.Layout;
 using iText.Layout.Element;
@@ -126,22 +127,30 @@ namespace ImportExport.CrossCutting.Utils.Helpers
                 var pageItems = items.Where(q => q.PageIndex == pageNum).ToList();
                 var page = pdf.GetPage(pageNum);
                 var canvas = new PdfCanvas(page);
-                foreach(var item in pageItems)
+                foreach (var item in pageItems)
                 {
+                    var newLine = item.Y - item.Height;
+                    var maxWidth = page.GetCropBox().GetWidth() - item.X;
                     var values = item.Value.EnumByNearestSpace(35);
-                    var height = item.Y - item.Height;
+                    var line = values.Count() + 1;
+                    var heightLines = (item.Height * line) - 5;
+                    canvas
+                        .SetFillColorRgb(255, 255, 255)
+                        .Fill()
+                        .Rectangle(item.X - 5, item.Y - heightLines, maxWidth - 20, heightLines)
+                        .SetStrokeColorRgb(255, 0, 0)
+                        .FillStroke();
                     foreach (var value in values)
                     {
                         canvas.SaveState()
-                            .BeginText()
-                            .MoveText(item.X, height)
-                            .SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_BOLDITALIC), 7)
-                            .SetFillColorRgb(255, 0, 0)
-                            .SetStrokeColorRgb(0, 0, 255)
-                            .NewlineShowText(value)
-                            .EndText()
-                            .RestoreState();
-                        height -= item.Height;
+                               .BeginText()
+                               .MoveTextWithLeading(item.X, newLine)
+                               .SetFontAndSize(PdfFontFactory.CreateFont(StandardFonts.TIMES_BOLDITALIC), 7)
+                               .SetFillColorRgb(255, 0, 0)
+                               .ShowText(value)
+                               .EndText()
+                        .RestoreState();
+                        newLine = newLine - item.Height;
                     }
                 }
                 canvas.Release();
