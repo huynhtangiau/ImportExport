@@ -54,7 +54,7 @@ namespace ImportExport.API.Controllers
                 rootFolder.ConvertXLSX();
                 var refundExcelFile = Directory.GetFiles(rootFolder, "ToKhaiHQ7N_QDTQ*.xlsx", SearchOption.TopDirectoryOnly);
                 var amaExcelFile = Directory.GetFiles(rootFolder, "ToKhaiAMA_*.xlsx", SearchOption.TopDirectoryOnly);
-                var taxGovPDFFile = Directory.GetFiles(rootFolder, "GNTThue*.pdf", SearchOption.TopDirectoryOnly);
+                var taxGovPDFFile = Directory.GetFiles(rootFolder, "GNT*.pdf", SearchOption.TopDirectoryOnly);
                 if (taxGovPDFFile.Length == 0 || amaExcelFile.Length == 0 || refundExcelFile.Length == 0)
                 {
                     continue;

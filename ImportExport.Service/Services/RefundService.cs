@@ -46,7 +46,7 @@ namespace ImportExport.Service.Services
         public void TranformData(RefundTaxDeclarationModel refundTaxDeclaration
             , string govTaxContent)
         {
-            var pattern = @"((1901)|(1702))[\s]+[\d\,]+[\s]*VNĐ";
+            var pattern = @"((1901)|(1702))[\s]+[\d\,]+.*VNĐ";
             var lstMatched = Regex.Matches(govTaxContent, pattern);
             var ImportAmounted = lstMatched[0].Value
                 .Replace("1901", string.Empty)

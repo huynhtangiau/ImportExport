@@ -43,6 +43,7 @@ namespace ImportExport.CrossCutting.Utils.Helpers
                     currentText = Encoding.UTF8.GetString(ASCIIEncoding.Convert(Encoding.Default, Encoding.UTF8, Encoding.Default.GetBytes(currentText)));
                     text.Append(currentText);
                 }
+                pdfDocument.Close();
             }
             return text.ToString();
         }
@@ -137,7 +138,7 @@ namespace ImportExport.CrossCutting.Utils.Helpers
                     canvas
                         .SetFillColorRgb(255, 255, 255)
                         .Fill()
-                        .Rectangle(item.X - 5, item.Y - heightLines, maxWidth - 20, heightLines)
+                        .Rectangle(item.X - 5, item.Y - heightLines, maxWidth - 2, heightLines)
                         .SetStrokeColorRgb(255, 0, 0)
                         .FillStroke();
                     foreach (var value in values)

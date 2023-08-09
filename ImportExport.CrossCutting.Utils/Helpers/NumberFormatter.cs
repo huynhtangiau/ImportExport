@@ -1,6 +1,7 @@
 ﻿using Humanizer;
 using System;
 using System.Globalization;
+using System.Linq;
 
 namespace ImportExport.CrossCutting.Utils.Helpers
 {
@@ -13,7 +14,8 @@ namespace ImportExport.CrossCutting.Utils.Helpers
         }
         public static int ToInt(this string numStr)
         {
-            return int.Parse(numStr.Replace(".", string.Empty).Replace(",", string.Empty));
+            var validNumber = new string(numStr.Where(c => char.IsDigit(c)).ToArray());
+            return int.Parse(validNumber);
         }
         public static string ToComma(this int num)
         {
