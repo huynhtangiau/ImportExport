@@ -50,10 +50,10 @@ namespace ImportExport.Service.Services
             var lstMatched = Regex.Matches(govTaxContent, pattern);
             var ImportAmounted = lstMatched[0].Value
                 .Replace("1901", string.Empty)
-                .Replace("VNĐ", string.Empty).Trim();
+                .Replace("VNĐ", string.Empty, StringComparison.CurrentCultureIgnoreCase).Trim();
             var VATAmounted = lstMatched[1].Value
                 .Replace("1702", string.Empty)
-                .Replace("VNĐ", string.Empty).Trim();
+                .Replace("VNĐ", string.Empty, StringComparison.CurrentCultureIgnoreCase).Trim();
 
             refundTaxDeclaration.RefundTaxDate = refundTaxDeclaration.RefundTaxDate.ToDate();
             refundTaxDeclaration.RegisterDate = refundTaxDeclaration.RegisterDate.ToDate();

@@ -70,7 +70,7 @@ namespace ImportExport.Service.Services
             {
                 productLicense.Items = RemoveSetPCS(items);
 
-                var licenseDates = worksheet.Cells[rowIndex, columnIndex.LicenseDate].Text.Replace("NGÀY", string.Empty)
+                var licenseDates = worksheet.Cells[rowIndex, columnIndex.LicenseDate].Text.Replace("NGÀY", string.Empty, StringComparison.CurrentCultureIgnoreCase)
                     .Split(new string[] { "\r\n", "\n" }, StringSplitOptions.None)
                     .Where(q => !string.IsNullOrWhiteSpace(q))
                     .ToArray();
@@ -138,7 +138,7 @@ namespace ImportExport.Service.Services
                     continue;
                 }
                 var pdfLicenseNo = signatureArrays[3].Trim().ToLower();
-                var pdfLicenseDate = signatureArrays[1].Replace("NGÀY", string.Empty).Trim().ToDateFull();
+                var pdfLicenseDate = signatureArrays[1].Replace("NGÀY", string.Empty, StringComparison.CurrentCultureIgnoreCase).Trim().ToDateFull();
                 if(product.LicenseNo.ToLower() == pdfLicenseNo && product.LicenseDate == pdfLicenseDate)
                 {
                     return new SearchFileModel { 
