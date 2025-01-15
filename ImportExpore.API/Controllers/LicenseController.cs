@@ -21,9 +21,9 @@ namespace ImportExport.API.Controllers
         }
 
         [HttpPost]
-        public ActionResult ExportProductsIntoFolder(string productsExcelPath = @"C:\Users\giau.huynh.STS\Giau\Support\LICENSE\Products.xlsx",
-            string sourceFolder = @"C:\Users\giau.huynh.STS\Giau\Support\LICENSE\Source",
-            string outputFolder = @"C:\Users\giau.huynh.STS\Giau\Support\LICENSE\Test")
+        public ActionResult ExportProductsIntoFolder(string productsExcelPath = @"C:\Users\giau.huynh\Giau\LGVina\License\Products.xlsx",
+            string sourceFolder = @"C:\Users\giau.huynh\Giau\LGVina\License\Sources",
+            string outputFolder = @"C:\Users\giau.huynh\Giau\LGVina\License\Output")
         {
             var productLicenses = _licenseService.ReadData(productsExcelPath);
             var success = _licenseService.ExportIntoFolder(productLicenses, sourceFolder, outputFolder);

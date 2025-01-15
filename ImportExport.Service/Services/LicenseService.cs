@@ -86,8 +86,10 @@ namespace ImportExport.Service.Services
                     product.ProductName = RemoveInvalidCharacters(product.ProductName);
                     product.ProductNameV1 = product.ProductName.Replace(":", " ");
                     product.ProductName = product.ProductName.Replace(":", string.Empty);
-
-                    if (productLicense.Items.Count <= licenseNos.Length + 1)
+                    var productItems = productLicense.Items
+                        .Where(q => !string.IsNullOrEmpty(q.LicenseNo))
+                        .ToList();
+                    if (productItems.Count <= licenseNos.Length)
                     {
                         product.LicenseNo = licenseNos[index].Trim();
                         product.LicenseDate = licenseDates[index].Trim().ToDateFull();
