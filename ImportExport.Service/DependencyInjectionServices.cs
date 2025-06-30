@@ -12,6 +12,8 @@ namespace ImportExport.Service
             services.AddScoped<IRefundService, RefundService>();
             services.AddScoped<ILicenseService, LicenseService>();
             services.AddScoped<IValidationService, ValidationService>();
+            services.AddScoped<ISemanticSearchService, SemanticSearchService>();
+            services.AddHttpClient<SemanticSearchService>();
 
         }
     }

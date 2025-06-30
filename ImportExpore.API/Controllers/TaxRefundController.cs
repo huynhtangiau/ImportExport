@@ -43,8 +43,8 @@ namespace ImportExport.API.Controllers
 
         [HttpGet("TaxRefunds")]
         public async Task<ActionResult> DeclareTaxRefunds(
-            string rootFolder = @"C:\Users\giau.huynh.STS\Giau\Support\TaxRefund",
-            string outputFolder = @"C:\Users\giau.huynh.STS\Giau\Support\TaxRefund")
+            string rootFolder = @"C:\Users\giau.huynh\Giau\LGVina\TaxRefund",
+            string outputFolder = @"C:\Users\giau.huynh\Giau\LGVina\TaxRefund")
         {
             var refundIds = Directory.GetDirectories(rootFolder);
             foreach (var refundId in refundIds)

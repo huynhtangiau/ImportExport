@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace ImportExport.Core.Models
 {
-    public enum SearchResultKey { Found, FirstItem }
+    public enum SearchResultKey { Found, FirstItem, LowConfidence }
     public class SearchFileModel
     {
         public SearchResultKey ResultKey { get; set; }
         public FileModel File { get; set; }
+        public double SimilarityScore { get; set; }
     }
 }

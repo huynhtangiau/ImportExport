@@ -21,6 +21,9 @@
     <PackageReference Include="EPPlus" Version="6.0.8" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.18.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime" Version="1.16.3" />
+    <PackageReference Include="System.Numerics.Tensors" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ImportExport.Core\ImportExport.Core.csproj" />

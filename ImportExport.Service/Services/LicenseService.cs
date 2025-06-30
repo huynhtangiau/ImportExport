@@ -19,10 +19,13 @@ namespace ImportExport.Service.Services
     {
         private readonly IOptions<LicenseSettings> _licenseSettings;
         private readonly ColumnIndexSettings columnIndex;
-        public LicenseService(IOptions<LicenseSettings> licenseSettings)
+        private readonly ISemanticSearchService _semanticSearchService;
+        
+        public LicenseService(IOptions<LicenseSettings> licenseSettings, ISemanticSearchService semanticSearchService)
         {
             _licenseSettings = licenseSettings;
             columnIndex = _licenseSettings.Value.ColumnIndex;
+            _semanticSearchService = semanticSearchService;
         }
         private List<ProductModel> RemoveSetPCS(string products)
         {
@@ -155,7 +158,7 @@ namespace ImportExport.Service.Services
                 File = searchFiles.FirstOrDefault()
             };
         }
-        private void FindByProductName(ProductLicenseModel productLicense, List<FileModel> files, string outputFolder)
+        private async void FindByProductName(ProductLicenseModel productLicense, List<FileModel> files, string outputFolder)
         {
             if (productLicense.Items.Count == 0)
             {
@@ -169,20 +172,48 @@ namespace ImportExport.Service.Services
 
             foreach (var product in productLicense.Items)
             {
-                var fileSearchPaths = files.Where(q => q.FileName.ToLower().Contains(product.ProductName.ToLower())
-                    || (!string.IsNullOrEmpty(product.ProductNameV1) && q.FileName.ToLower().Contains(product.ProductNameV1.ToLower())))
-                    .OrderByDescending(o => o.CreatedDate)
-                    .ToList();
+                List<FileModel> fileSearchPaths;
+                
+                // Use semantic search if enabled
+                if (_licenseSettings.Value.SemanticSearch.Enabled)
+                {
+                    var semanticResults = await _semanticSearchService.SearchSimilarFilesAsync(
+                        product.ProductName, 
+                        files, 
+                        _licenseSettings.Value.SemanticSearch.SimilarityThreshold);
+                    
+                    fileSearchPaths = semanticResults.Select(r => r.File).ToList();
+                }
+                else
+                {
+                    // Fallback to original filename matching
+                    fileSearchPaths = files.Where(q => q.FileName.ToLower().Contains(product.ProductName.ToLower())
+                        || (!string.IsNullOrEmpty(product.ProductNameV1) && q.FileName.ToLower().Contains(product.ProductNameV1.ToLower())))
+                        .OrderByDescending(o => o.CreatedDate)
+                        .ToList();
+                }
+
+                // If semantic search enabled but no results, fallback to filename matching
+                if (_licenseSettings.Value.SemanticSearch.Enabled && 
+                    _licenseSettings.Value.SemanticSearch.UseFilenameMatching && 
+                    fileSearchPaths.Count == 0)
+                {
+                    fileSearchPaths = files.Where(q => q.FileName.ToLower().Contains(product.ProductName.ToLower())
+                        || (!string.IsNullOrEmpty(product.ProductNameV1) && q.FileName.ToLower().Contains(product.ProductNameV1.ToLower())))
+                        .OrderByDescending(o => o.CreatedDate)
+                        .ToList();
+                }
+                
                 if (fileSearchPaths.Count > 0)
                 {
-                    var productLicensePath = newPCBFolder;// Path.Combine(outputFolder, productLicense.ProductNo);
+                    var productLicensePath = newPCBFolder;
                     var search = FindByLicenseNoAndDate(product, fileSearchPaths);
                     if(search.File == null)
                     {
                         continue;
                     }
                     var newFileName = string.Empty;
-                    if(search.ResultKey == SearchResultKey.FirstItem)
+                    if(search.ResultKey == SearchResultKey.FirstItem || search.ResultKey == SearchResultKey.LowConfidence)
                     {
                         newFileName = $"{productLicense.ProductNo}_backup_{index}.pdf";
                     }
@@ -194,7 +225,6 @@ namespace ImportExport.Service.Services
                         500);
 
                     index++;
-
                 }
             }
         }
