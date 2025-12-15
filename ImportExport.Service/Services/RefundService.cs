@@ -63,7 +63,7 @@ namespace ImportExport.Service.Services
             var importAmounted = ImportAmounted.ToInt();
             var vATAmounted = VATAmounted.ToInt();
 
-            refundTaxDeclaration.TotalAmount = (importAmount + vATAmount).ToComma();
+            refundTaxDeclaration.TotalAmount = importAmount.ToComma();
             refundTaxDeclaration.ImportAmount = refundTaxDeclaration.ImportAmount.ToComma();
             refundTaxDeclaration.VATAmount = refundTaxDeclaration.VATAmount.ToComma();
             refundTaxDeclaration.ImportMustPayAmount = (importAmounted - importAmount).ToComma();
